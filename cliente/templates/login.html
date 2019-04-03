@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Sign in/ Sign Up</title>
+    <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet">
+
+</head>
+<body>
+<div>
+    <div name="nav-bar">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="{% url 'listarProdutos' %}">Django</a>
+
+            <div class="collapse navbar-collapse" id="conteudoNavbarSuportado">
+                <ul class="navbar-nav mr-auto">
+                    {% if not request.COOKIES.cliente %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'loginCliente' %}">Sign</a>
+                    </li>
+                    {% endif %}
+                </ul>
+                <form class="form-inline my-2 my-lg-0" method="post" action="{% url 'pesquisarProduto' %}">
+                    {% csrf_token %}
+                    <input class="form-control mr-sm-2" name="pesquisa" id="pesquisa" type="search"
+                           placeholder="Pesquisar"
+                           aria-label="Pesquisar">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Pesquisar</button>
+                </form>
+            </div>
+        </nav>
+    </div>
+
+    <div class="container-fluid">
+        <div class="container">
+            <h2 class="text-center" id="title">Django Store</h2>
+            {% if messages %}
+                <ul class="alert alert-primary">
+                    {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            <hr>
+            <div class="row">
+                <div class="col-md-5">
+                    <form role="form" method="post" action="{% url 'criarCliente' %}">
+                        {% csrf_token %}
+                        <fieldset>
+                            <p class="text-uppercase pull-center"> SIGN UP.</p>
+                            <div class="form-group">
+                                <input type="text" name="nome" id="nome" class="form-control input-lg"
+                                       placeholder="Nome">
+                            </div>
+
+                            <div class="form-group">
+                                <input type="email" name="email" id="email" class="form-control input-lg"
+                                       placeholder="Email Address">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" name="endereco" id="endereco" class="form-control input-lg"
+                                       placeholder="Endereço">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" name="telefone" id="telefone" class="form-control input-lg"
+                                       placeholder="Telefone">
+                            </div>
+                            <div class="form-group">
+                                <input type="password" name="senha" id="senha" class="form-control input-lg"
+                                       placeholder="Senha">
+                            </div>
+                            <div class="form-check">
+                                <label class="form-check-label">
+                                    <input type="checkbox" class="form-check-input">
+                                    By Clicking register you're agree to our policy & terms
+                                </label>
+                            </div>
+                            <div>
+                                <input type="submit" class="btn btn-lg btn-primary " value="Registrar">
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+
+                <div class="col-md-2">
+                    <!-------null------>
+                </div>
+
+                <div class="col-md-5">
+                    {% if error %}
+                        <div class="alert alert-primary">
+                            {{ error }}
+                        </div>
+                    {% endif %}
+                    <form method="post" action="{% url 'loginCliente' %}">
+                        {% csrf_token %}
+
+                        <fieldset>
+                            <p class="text-uppercase"> Login using your account: </p>
+
+                            <div class="form-group">
+                                <input type="email" name="email" id="email" class="form-control input-lg"
+                                       placeholder="E-mail">
+                            </div>
+                            <div class="form-group">
+                                <input type="password" name="senha" id="senha" class="form-control input-lg"
+                                       placeholder="senha">
+                            </div>
+                            <div>
+                                <input type="submit" class="btn btn-md" value="Sign In">
+                            </div>
+
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
