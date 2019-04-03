@@ -1,12 +1,9 @@
 from django.db.models import Q
 from django.contrib import messages
-
 from django.shortcuts import render, redirect
-
 from produto.models import Pedido, ItemCarrinho
 from .models import Cliente
 from .forms import FormCliente
-
 
 def listarClientes(request):
     clientes = Cliente.objects.all()
@@ -26,8 +23,9 @@ def criarCliente(request):
     form = FormCliente(request.POST or None)
     if form.is_valid():
         cliente = form.save()
-        response = redirect('listarClientes')
+        response = redirect('listarProdutos')
         response.set_cookie("cliente", cliente.id)
+        response = gerarCarrinho(cliente, response)
         return response
     messages.info(request, form.errors.as_text())
     return render(request, 'login.html', {

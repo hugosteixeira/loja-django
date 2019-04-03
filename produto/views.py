@@ -73,6 +73,8 @@ def adicionarCarrinho(request, id):
     carrinho = Pedido.objects.filter(id=request.COOKIES['carrinho']).get()
     criterio1 = Q(produto=produto)
     criterio2 = Q(carrinho=carrinho)
+    if 'cliente' not in request.COOKIES.keys():
+        return redirect('loginCliente')
     try:
         itemCarrinho = ItemCarrinho.objects.filter(criterio1 & criterio2).get()
         itemCarrinho.quantidade +=1
