@@ -1,9 +1,9 @@
 from django.db.models import Q
-from django.http import HttpResponse
 from django.contrib import messages
-import json
 
 from django.shortcuts import render, redirect
+
+from produto.models import Pedido
 from .models import Cliente
 from .forms import FormCliente
 
@@ -11,14 +11,14 @@ from .forms import FormCliente
 def listarClientes(request):
     clientes = Cliente.objects.all()
     return render(request, 'listarClientes.html', {
-        'clientes':clientes
+        'clientes': clientes
     })
 
 
-def cliente(request,codigo):
+def cliente(request, codigo):
     cliente = Cliente.objects.get(id=codigo)
     return render(request, 'cliente.html', {
-        'cliente':cliente
+        'cliente': cliente
     })
 
 
@@ -40,13 +40,30 @@ def loginCliente(request):
         dados = request.POST.copy()
         email = Q(email=dados.get('email'))
         senha = Q(senha=dados.get('senha'))
-        cliente = Cliente.objects.filter(email & senha).values()
+        cliente = Cliente.objects.filter(email & senha).get()
         if not cliente:
             return render(request, 'login.html', {'error': 'Usuário ou senha invalidos.'})
         response = redirect('listarProdutos')
-        response.set_cookie("cliente", cliente[0]['id'])
+        response.set_cookie("cliente", cliente.id)
+        response = gerarCarrinho(cliente, response)
         return response
     return render(request, 'login.html')
 
 
+def gerarCarrinho(cliente,resposta):
+    pedido = Pedido(cliente=cliente, status='aberto')
+    pedido.save()
+    resposta.set_cookie('carrinho', pedido.id)
+    return resposta
 
+
+def logout(request):
+    response = redirect('listarProdutos')
+    response.delete_cookie('cliente')
+    return response
+
+
+def meusPedidos(request):
+    cliente = Cliente.objects.filter(id=request.COOKIES['cliente']).get()
+    pedidos = Pedido.objects.filter(cliente=cliente).all()
+    return render(request,'meusPedidos.html')

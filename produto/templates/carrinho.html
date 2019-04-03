@@ -1,4 +1,4 @@
-{% load static %}
+{% load django_template_maths %}
 <!doctype html>
 <html lang="en">
 <head>
@@ -6,7 +6,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Lojinha</title>
+    <title>Carrinho</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
@@ -14,6 +14,7 @@
 
 
 </head>
+<body>
 <div>
     <div name="nav-bar">
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -28,7 +29,8 @@
                     {% endif %}
                     {% if request.COOKIES.cliente %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'listarCarrinho' %}">({{ quantidade }}) Items no carrinho</a>
+                            <a class="nav-link" href="{% url 'listarCarrinho' %}">({{ quantidade }}) Items no
+                                carrinho</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'logout' %}">Sair</a>
@@ -46,17 +48,44 @@
             </div>
         </nav>
     </div>
-    {% for produto in produtos %}
-        <p>
-            <div class="card" style="width: 18rem; float: left; margin-left: 50px">
-                <img src="{{ produto.image.url }}" class="card-img-top" alt="{{ produto.nome }}">
-                <div class="card-body">
-                    <h5 class="card-title">{{ produto.nome }}</h5>
-        <p class="card-text">{{ produto.descricao }}</p>
-        <a href="{% url 'adicionarCarrinho' id=produto.id %}" class="btn btn-primary">{{ produto.preco }}</a>
-        </div>
-        </div>
-        </p>
-    {% endfor %}
+    <div style="margin-left: 35%">
+
+        {% for produto in items %}
+            <p>
+                <div class="card mb-3" style="max-width: 540px;">
+                    <div class="row no-gutters">
+                        <div class="col-md-4">
+                            <img src="{{ produto.produto.image.url }}" class="card-img" alt="...">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ produto.produto.nome }}</h5>
+            <p class="card-text">{{ produto.produto.descricao }}</p>
+            <p class="card-text">R$ {{ produto.produto.preco }}</p>
+
+            <p class="card-text">
+                <small class="text-muted"><a href="{% url 'removerItem' id=produto.produto.id %}">
+                    <button type="submit">-</button>
+                </a> {{ produto.quantidade }}<a href="{% url 'adicionarCarrinho' id=produto.produto.id %}">
+                    <button href="">+</button>
+                </a></small>
+            <p class="card-text">R$ {{ produto.produto.preco|mul:produto.quantidade }}</p>
+
+            </p>
+
+
+            </div>
+            </div>
+            </div>
+            </div>
+            </p>
+        {% endfor %}
+<div class="card" style="width: 18rem;">
+    <div class="card-body">
+        <h5 class="card-title">Valor total: {{ valorTotal }}</h5>
+        <a href="{% url 'fecharPedido' %}" class="card-link">Fechar pedido</a>
+    </div>
+</div>
+</div>
 </body>
 </html>
