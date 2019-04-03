@@ -1,3 +1,4 @@
+{% load django_template_maths %}
 <!doctype html>
 <html lang="en">
 <head>
@@ -5,11 +6,12 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Meus Pedidos</title>
+    <title>Carrinho</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
 
 </head>
 <body>
@@ -49,15 +51,33 @@
             </div>
         </nav>
     </div>
-    {% for pedido in pedidos %}
-        <div class="card" style="width: 18rem; margin-left: 35%; margin-top: 1%">
-            <div class="card-body">
-                <h5 class="card-title">{{ pedido.valorTotal }}</h5>
-                <h7 class="card-title">{{ pedido.dataFinalizacao }}</h7>
+    <div style="margin-left: 35%">
 
-                <a href="{% url 'meuPedido' id=pedido.id %}" class="card-link">Olhar Pedido</a>
+        {% for produto in items %}
+            <p>
+                <div class="card mb-3" style="max-width: 540px;">
+                    <div class="row no-gutters">
+                        <div class="col-md-4">
+                            <img src="{{ produto.produto.image.url }}" class="card-img" alt="...">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ produto.produto.nome }}</h5>
+            <p class="card-text">{{ produto.produto.descricao }}</p>
+            <p class="card-text">R$ {{ produto.produto.preco }}</p>
+            <p class="card-text">
+                Total de produtos: {{ produto.quantidade }}
+            <p class="card-text">R$ {{ produto.produto.preco|mul:produto.quantidade }}</p>
+
+            </p>
+
+
             </div>
-        </div>
-    {% endfor %}
+            </div>
+            </div>
+            </div>
+            </p>
+        {% endfor %}
+</div>
 </body>
 </html>

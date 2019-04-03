@@ -13,8 +13,7 @@
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 
 
-</head>
-<div>
+</head><div>
     <div name="nav-bar">
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <a class="navbar-brand" href="{% url 'listarProdutos' %}">Django</a>
@@ -28,7 +27,11 @@
                     {% endif %}
                     {% if request.COOKIES.cliente %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'listarCarrinho' %}">({{ quantidade }}) Items no carrinho</a>
+                            <a class="nav-link" href="{% url 'listarCarrinho' %}">({{ quantidade }}) Items no
+                                carrinho</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'meusPedidos' %}">Meus Pedidos</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'logout' %}">Sair</a>

@@ -15,6 +15,7 @@ class Pedido(models.Model):
     cliente = models.ForeignKey(Cliente,on_delete=models.CASCADE)
     status = models.CharField(max_length=50)
     dataFinalizacao = models.DateField(blank=True,null=True)
+    valorTotal = models.DecimalField(decimal_places=2, max_digits=15,default=0)
 
 
 class ItemCarrinho(models.Model):

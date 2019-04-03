@@ -13,4 +13,5 @@ urlpatterns = [
     path('produto/tirar/<int:id>', removerItem, name='removerItem'),
     path('produto/fechar/', fecharPedido, name='fecharPedido'),
 
+
 ]

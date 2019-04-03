@@ -3,7 +3,7 @@ from django.contrib import messages
 
 from django.shortcuts import render, redirect
 
-from produto.models import Pedido
+from produto.models import Pedido, ItemCarrinho
 from .models import Cliente
 from .forms import FormCliente
 
@@ -50,7 +50,7 @@ def loginCliente(request):
     return render(request, 'login.html')
 
 
-def gerarCarrinho(cliente,resposta):
+def gerarCarrinho(cliente, resposta):
     pedido = Pedido(cliente=cliente, status='aberto')
     pedido.save()
     resposta.set_cookie('carrinho', pedido.id)
@@ -64,6 +64,23 @@ def logout(request):
 
 
 def meusPedidos(request):
+    args = {}
+    if request.COOKIES['carrinho']:
+        carrinho = Pedido.objects.filter(id=request.COOKIES['carrinho']).get()
+        itemsCarrinho = ItemCarrinho.objects.filter(carrinho=carrinho).all()
+        quantidade = 0
+        for x in itemsCarrinho:
+            quantidade += x.quantidade
+        args['quantidade'] = quantidade
     cliente = Cliente.objects.filter(id=request.COOKIES['cliente']).get()
-    pedidos = Pedido.objects.filter(cliente=cliente).all()
-    return render(request,'meusPedidos.html')
+    pedidos = Pedido.objects.filter(cliente=cliente,status='fechado').all()
+    args['pedidos'] = pedidos
+    return render(request, 'meusPedidos.html', args)
+
+
+def meuPedido(request, id):
+    carrinho = Pedido.objects.filter(id=id).get()
+    itemsCarrinho = ItemCarrinho.objects.filter(carrinho=carrinho).all()
+    quantidade = 0
+    args = {'quantidade': quantidade, 'items': itemsCarrinho}
+    return render(request, 'pedido.html', args)

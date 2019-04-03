@@ -114,10 +114,16 @@ def removerItem(request, id):
 
 
 def fecharPedido(request):
-    print(request.COOKIES)
     carrinho = Pedido.objects.filter(id=request.COOKIES['carrinho']).get()
+    itemsCarrinho = ItemCarrinho.objects.filter(carrinho=carrinho).all()
+
     carrinho.status = "fechado"
-    now = datetime.datetime.now()
+    valorTotal = 0
+    for x in itemsCarrinho:
+        valorTotal += x.quantidade * x.preco
+    carrinho.valorTotal = valorTotal
+    now = datetime.date.today()
+    print(now)
     carrinho.dataFinalizacao = now
     carrinho.save()
     resposta = redirect('listarProdutos')
